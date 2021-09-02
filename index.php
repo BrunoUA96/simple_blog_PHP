@@ -16,92 +16,202 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-                    </li>
-                </ul>
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
-        </div>
-    </nav>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-9">
-                <div class="row">
-                    <h4>
-                        Card list
-                    </h4>
+    <!-- Header -->
+    <?php require_once 'partials/header.php' ?>
 
+    <div class="container-fluid my-5 px-5">
+        <div class="row">
+            <div class="col-8">
+                <div class="row">
+                    <div class="col-12">
+                        <h4>
+                            All posts
+                        </h4>
+                    </div>
+
+                    <!-- Card -->
                     <?php 
-                        $posts = mysqli_query($connect, "SELECT * FROM `posts`");
+                        $posts = mysqli_query($connect, "SELECT * FROM `posts` ORDER BY `id` DESC LIMIT 6");
                         $posts = mysqli_fetch_all($posts);
                         foreach ($posts as $post) {
-                        ?>
-                        <!-- Card -->
+                    ?>
                         <div class="col-4">
-                            <div class="card">
+                            <div class="card alert-secondary">
                                 <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
                                     <title>Placeholder</title>
                                     <rect width="100%" height="100%" fill="#868e96"></rect>
-                                    <text x="50%" y="50%" fill="#dee2e6" dy=".3em">
+                                    <text x="40%" y="50%" fill="#dee2e6" dy=".3em">
                                         Image cap
                                     </text>
                                 </svg>
                                 <div class="card-body">
+                                    <?php
+                                        $category_name = '';
+                                        foreach ($categories as $category) {
+                                            if ($category[0] == $post[3]) {
+                                                $category_name = $category;
+                                                break;
+                                            } 
+                                        }
+                                    ?>
+
+                                    <small class="text-secondary">
+                                        <?=$category_name[1] ?>
+                                    </small>
+
                                     <h5 class="card-title">
                                         <?=$post[1] ?>
                                     </h5>
                                     <p class="card-text">
                                         <?=$post[2] ?>
                                     </p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                    <a href="post.php?id=<?=$post[0]?>" class="btn btn-secondary">Go somewhere</a>
                                 </div>
                             </div>
                         </div>
-                        <?php
+                    <?php
+                        } 
+                    ?>
+                    <div class="col-12 mt-4">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-end">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="col-12">
+                        <hr>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h4>
+                            Cars
+                        </h4>
+                    </div>
+                    <!-- Card -->
+                    <?php 
+                        $posts = mysqli_query($connect, "SELECT * FROM `posts` WHERE `category_id` = 1 ORDER BY `id` DESC LIMIT 3");
+                        $posts = mysqli_fetch_all($posts);
+                        foreach ($posts as $post) {
+                    ?>
+                        <div class="col-4">
+                            <div class="card alert-secondary">
+                                <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                    <title>Placeholder</title>
+                                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                                    <text x="40%" y="50%" fill="#dee2e6" dy=".3em">
+                                        Image cap
+                                    </text>
+                                </svg>
+                                <div class="card-body">
+                                    <?php
+                                        $category_name = '';
+                                        foreach ($categories as $category) {
+                                            if ($category[0] == $post[3]) {
+                                                $category_name = $category;
+                                                break;
+                                            } 
+                                        }
+                                    ?>
+
+                                    <small class="text-secondary">
+                                        <?=$category_name[1] ?>
+                                    </small>
+
+                                    <h5 class="card-title">
+                                        <?=$post[1] ?>
+                                    </h5>
+                                    <p class="card-text">
+                                        <?=$post[2] ?>
+                                    </p>
+                                    <a href="post.php?id=<?=$post[0]?>" class="btn btn-secondary">Go somewhere</a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php
                         } 
                     ?>
                 </div>
             </div>
-            <div class="col-3">
+            <div class="col-3 offset-1">
                 <div class="row">
                     <div class="col-12">
                         <h4>
-                            Side bar
+                            Top Views Posts
                         </h4>
+
+                        <?php 
+                            $topPosts = mysqli_query($connect, "SELECT * FROM `posts` ORDER BY `views` DESC LIMIT 4");
+                            $topPosts = mysqli_fetch_all($topPosts);
+                            foreach ($topPosts as $topPost) {
+                        ?>
+
+                            <div class="col-12 mb-4 alert alert-success">
+                                <article class="row">
+                                    <div class="col-4">
+                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="90" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            <title>Placeholder</title>
+                                            <rect width="100%" height="100%" fill="#868e96"></rect>
+                                            <text x="30%" y="50%" fill="#dee2e6" dy=".3em">
+                                                Image
+                                            </text>
+                                        </svg>
+                                    </div>
+                                    <div class="col-8">
+                                        <h6 class="mb-0"><?= $topPost[1] ?></h6 class="mb-0">
+                                        <span class="mb-2 d-block">
+                                            <?= $topPost[2] ?>
+                                        </span>
+                                        <a href="post.php?id=<?=$topPost[0]?>" class="btn btn-success d-block py-1"><small>See post</small></a>
+                                    </div>
+                                </article>
+                            </div> 
+
+                        <?php
+                            }
+                        ?>
+                    </div>
+                    <div class="col-12">
+                        <h4>
+                            Last Comments
+                        </h4>
+                        <?php 
+
+                            $comments = mysqli_query($connect, "SELECT * FROM `comments` ORDER BY `id` DESC LIMIT 4");
+                            $comments = mysqli_fetch_all($comments);
+                            foreach ($comments as $comment ) {
+                        ?>
+                            <div class="col-12 mb-4 alert alert-success">
+                                <article class="row">
+                                    <div class="col-3">
+                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            <title>Placeholder</title>
+                                            <rect width="100%" height="100%" fill="#868e96"></rect>
+                                            <text x="25%" y="50%" fill="#dee2e6" dy=".3em">
+                                                Image
+                                            </text>
+                                        </svg>
+                                    </div>
+                                    <div class="col-9">
+                                        <h6 class="mb-0"><?=$comment[3]?></h6>
+                                        <small><?=$comment[1]?></small>
+                                        <a href="post.php?id=<?=$comment[2]?>" class="btn btn-secondary d-block py-1"><small>See post</small></a>
+                                    </div>
+                                </article>
+                            </div>
+                        <?php
+                            }
+
+                        ?>
                     </div>
                 </div>
             </div>

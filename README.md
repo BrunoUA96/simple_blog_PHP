@@ -12,4 +12,4 @@ Columns = posts, categories, comments
 ## Structure
 
 - Home page - List posts, Categories and lacts comments.
-- Post page - Show clicked post.
+- Post page - Show clicked post, show comments, write comments, counter views.
