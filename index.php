@@ -24,14 +24,43 @@
             <div class="col-8">
                 <div class="row">
                     <div class="col-12">
-                        <h4>
-                            All posts
+                        <h4 class="d-flex justify-content-between">
+                            <span>
+                                All posts
+                            </span>
+                            <a class="btn btn-warning" href="list_posts.php?posts=all">
+                                View all posts
+                            </a>
                         </h4>
                     </div>
 
                     <!-- Card -->
-                    <?php 
-                        $posts = mysqli_query($connect, "SELECT * FROM `posts` ORDER BY `id` DESC LIMIT 6");
+                    <?php
+
+
+                        if (isset($_GET['page'])) {
+                            $page_number = $_GET['page'];   
+                        } else {
+                            $page_number = 1;
+                        }
+                      
+                        $items_to_show = 3;
+                        $offset = ($page_number - 1) * $items_to_show;
+                        
+                        
+
+                        $posts_count = mysqli_query($connect, "SELECT COUNT(*) FROM `posts`");
+
+                        $total_posts_row = mysqli_fetch_array($posts_count)[0];
+
+                        
+                        $total_pages = ceil($total_posts_row / $items_to_show);
+
+                        if ($_GET['page'] > $total_pages) {
+                            header('Location: index.php');
+                        }
+                        
+                        $posts = mysqli_query($connect, "SELECT * FROM `posts` ORDER BY `id` DESC LIMIT $items_to_show OFFSET $offset");
                         $posts = mysqli_fetch_all($posts);
                         foreach ($posts as $post) {
                     ?>
@@ -44,6 +73,7 @@
                                         Image cap
                                     </text>
                                 </svg>
+                                
                                 <div class="card-body">
                                     <?php
                                         $category_name = '';
@@ -75,14 +105,26 @@
                     <div class="col-12 mt-4">
                         <nav aria-label="Page navigation example">
                             <ul class="pagination justify-content-end">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                <li class="page-item <?php if ($page_number <= 1) {echo 'disabled';} ?>">
+                                    <a class="page-link" href="<?php if ($page_number <= $total_pages) {echo '?page='.($page_number - 1);} else {echo '#';} ?>">
+                                        Previous
+                                    </a>
                                 </li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">Next</a>
+                                <?php
+                                    for($num = 1; $num < $total_pages + 1; $num++) {
+                                        ?>
+                                        <li class="page-item <?php if ($page_number == $num) echo 'active'?>">
+                                            <a class="page-link" href="?page=<?=$num?>">
+                                                <?=$num?>
+                                            </a>
+                                        </li><?php $page_number == $num ? 'active' : '' ?>
+                                        <?php
+                                    } 
+                                ?>
+                                <li class="page-item <?php if($page_number >= $total_pages) {echo 'disabled';} ?>">
+                                    <a class="page-link" href="<?php if($page_number >= $total_pages) {echo '#';} else {echo '?page='.($page_number + 1);} ?>">
+                                        Next
+                                    </a>
                                 </li>
                             </ul>
                         </nav>
@@ -146,7 +188,40 @@
                 <div class="row">
                     <div class="col-12">
                         <h4>
-                            Top Views Posts
+                            Last Comments
+                        </h4>
+                        <?php 
+
+                            $comments = mysqli_query($connect, "SELECT * FROM `comments` ORDER BY `id` DESC LIMIT 4");
+                            $comments = mysqli_fetch_all($comments);
+                            foreach ($comments as $comment ) {
+                        ?>
+                            <div class="col-12 mb-4 alert alert-success">
+                                <article class="row">
+                                    <div class="col-3">
+                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
+                                            <title>Placeholder</title>
+                                            <rect width="100%" height="100%" fill="#868e96"></rect>
+                                            <text x="25%" y="50%" fill="#dee2e6" dy=".3em">
+                                                Image
+                                            </text>
+                                        </svg>
+                                    </div>
+                                    <div class="col-9">
+                                        <h6 class="mb-0"><?=$comment[3]?></h6>
+                                        <small><?=$comment[1]?></small>
+                                        <a href="post.php?id=<?=$comment[2]?>" class="btn btn-secondary d-block py-1"><small>See post</small></a>
+                                    </div>
+                                </article>
+                            </div>
+                        <?php
+                            }
+
+                        ?>
+                    </div>
+                    <div class="col-12">
+                        <h4>
+                            Top Posts
                         </h4>
 
                         <?php 
@@ -178,39 +253,6 @@
 
                         <?php
                             }
-                        ?>
-                    </div>
-                    <div class="col-12">
-                        <h4>
-                            Last Comments
-                        </h4>
-                        <?php 
-
-                            $comments = mysqli_query($connect, "SELECT * FROM `comments` ORDER BY `id` DESC LIMIT 4");
-                            $comments = mysqli_fetch_all($comments);
-                            foreach ($comments as $comment ) {
-                        ?>
-                            <div class="col-12 mb-4 alert alert-success">
-                                <article class="row">
-                                    <div class="col-3">
-                                        <svg class="bd-placeholder-img card-img-top" width="100%" height="80" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                            <title>Placeholder</title>
-                                            <rect width="100%" height="100%" fill="#868e96"></rect>
-                                            <text x="25%" y="50%" fill="#dee2e6" dy=".3em">
-                                                Image
-                                            </text>
-                                        </svg>
-                                    </div>
-                                    <div class="col-9">
-                                        <h6 class="mb-0"><?=$comment[3]?></h6>
-                                        <small><?=$comment[1]?></small>
-                                        <a href="post.php?id=<?=$comment[2]?>" class="btn btn-secondary d-block py-1"><small>See post</small></a>
-                                    </div>
-                                </article>
-                            </div>
-                        <?php
-                            }
-
                         ?>
                     </div>
                 </div>
