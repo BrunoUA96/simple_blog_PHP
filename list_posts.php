@@ -16,24 +16,34 @@
     <?php require_once 'partials/header.php' ?>
 
     <!-- content -->
+    <?php
+        if ($_GET['category']) { 
+            $list_items = mysqli_query($connect, "SELECT * FROM `posts` WHERE `category_id` =".$_GET['category'] );
+            $category_name = mysqli_query($connect, "SELECT `categorie` FROM `categories` WHERE `id` =".$_GET['category']);
+            $category_name = mysqli_fetch_all($category_name)[0];
+            $title_page = $category_name[0];                   
+            } else if ($_GET['posts']) {
+            $list_items = mysqli_query($connect, "SELECT * FROM `posts`");
+            $title_page = 'All posts';
+            } else {
+                header("Location: index.php");
+            }
+
+        
+        $list_items = mysqli_fetch_all($list_items);
+    ?>
     <div class="container mt-5">
         <div class="row">
-            <?php
-                if ($_GET['category']) { 
-                    $list_items = mysqli_query($connect, "SELECT * FROM `posts` WHERE `category_id` =".$_GET['category'] );
-                 } else if ($_GET['posts']) {
-                    $list_items = mysqli_query($connect, "SELECT * FROM `posts`");
-                 } else {
-                     header("Location: index.php");
-                 }
-
-                
-                $list_items = mysqli_fetch_all($list_items);
-
+            <div class="col-12 mb-5">
+                <h1>
+                    <?=$title_page?>
+                </h1>
+            </div>
+                <?php
                 foreach ($list_items as $item) {
                     ?>
-                    <div class="col-4">
-                        <div class="card alert-secondary">
+                    <div class="col-4 mb-5">
+                        <div class="card alert-secondary h-100">
                             <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false">
                                 <title>Placeholder</title>
                                 <rect width="100%" height="100%" fill="#868e96"></rect>

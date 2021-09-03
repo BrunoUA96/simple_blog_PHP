@@ -14,7 +14,7 @@
                     foreach ($categories as $category) {
                 ?>
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="list_posts.php?category=<?=$category[0]?>">
+                    <a class="nav-link <?php if($_GET['category'] == $category[0]) {echo 'active';} ?>" aria-current="page" href="list_posts.php?category=<?=$category[0]?>">
                         <?= $category[1] ?>
                     </a>
                 </li>
